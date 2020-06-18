@@ -1,0 +1,124 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Name="mainwindow" x:Class="WpfApp1.MainWindow"
+        mc:Ignorable="d"
+        Title="StreetGears Launcher" Height="578" Width="1046" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Initialized="Mainwindow_Initialized" MouseRightButtonDown="Mainwindow_MouseRightButtonDown" MouseDown="Mainwindow_MouseDown">
+    <Window.Background>
+        <ImageBrush ImageSource="./data/Launcher Base (Logged Cleaned) .png"/>
+    </Window.Background>
+    <Grid MouseDown="Grid_MouseDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="283*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <Image x:Name="area_login" Height="170" Margin="0,0,10,10" Source="./data/Login Zone.png" Stretch="Fill" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="316" Grid.RowSpan="2"/>
+
+        <!-- BUTTON LOGIN -->
+        <Image x:Name="btn_login" Margin="0,0,174,13" Height="57" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="144" MouseUp="Btn_login_MouseUp">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="./data/Login_Default.png"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="./data/Login_Hover.png"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <!-- BUTTON FORGOT PASSWORD -->
+        <Image x:Name="btn_forgotpw" Margin="0,0,24,13" Height="57" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="144" MouseUp="Btn_forgotpw_MouseUp">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="./data/PW_Default.png"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="./data/PW_Hover.png"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <!-- BUTTON DISCONNECT -->
+        <Image x:Name="btn_logout" Margin="0,10,57,0" Height="42" VerticalAlignment="Top" HorizontalAlignment="Right" Width="51" MouseUp="Btn_logout_MouseUp">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="./data/Disconnect_Default.png"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="./data/Disconnect_Hover.png"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <!-- BUTTON CLOSE -->
+        <Image x:Name="btn_close" Margin="0,10,10,0" Height="42" VerticalAlignment="Top" HorizontalAlignment="Right" Width="50" MouseUp="Btn_close_MouseUp">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="./data/Close_Default.png"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="./data/Close_Hover.png"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+        <!-- BUTTON START -->
+        <Image x:Name="btn_start" Margin="0,407,24,-21" Height="192" VerticalAlignment="Top" HorizontalAlignment="Right" Width="283" MouseUp="Btn_start_MouseUp" Grid.RowSpan="2">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="./data/Start_Default.png"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="./data/Start_Hover.png"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        
+        <!-- BUTTON SETTINGS -->
+        <Image x:Name="btn_settings" Margin="0,10,135,0" Height="42" VerticalAlignment="Top" HorizontalAlignment="Right" Width="51" MouseUp="Btn_settings_MouseUp">
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="./data/Settings_Default.png"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Source" Value="./data/Settings_Hover.png"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+
+
+        <ProgressBar x:Name="pb_main" Height="33" Margin="10,0,10,29" VerticalAlignment="Bottom"/>
+        <ProgressBar x:Name="pb_sub" Height="10" Margin="10,0,331,-34" VerticalAlignment="Bottom" Grid.Row="1"/>
+        <TextBox x:Name="sai_login" HorizontalAlignment="Right" Height="23" Margin="0,0,34,116" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="174" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionOpacity="0" BorderThickness="0"/>
+        <PasswordBox x:Name="sai_pass" Margin="0,0,30,86" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="178" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" BorderThickness="0"/>
+        <Label x:Name="lbl_progresstext" Content="Label" HorizontalAlignment="Left" Margin="10,542,0,0" VerticalAlignment="Top" Width="1026" Grid.RowSpan="2"/>
+        <ListBox x:Name="list_servers" HorizontalAlignment="Left" Height="92" Margin="372,138,0,0" VerticalAlignment="Top" Width="343" FontSize="18.667" Foreground="White" BorderBrush="White" Padding="22,15,0,0">
+            <ListBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF2D3EAA" Offset="0.483"/>
+                    <GradientStop Color="#FF2A6CCB" Offset="1"/>
+                    <GradientStop Color="#FF5865BB" Offset="0.47"/>
+                    <GradientStop Color="#FF5865BB"/>
+                </LinearGradientBrush>
+            </ListBox.Background>
+        </ListBox>
+        <Label x:Name="lbl_serverselection" Content="SERVER SELECTION" HorizontalAlignment="Left" Margin="372,95,0,0" VerticalAlignment="Top" Width="343" Height="38" Foreground="White" FontSize="18.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        
+
+    </Grid>
+</Window>

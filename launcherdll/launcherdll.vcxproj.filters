@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources\base">
+      <UniqueIdentifier>{f72b3ef0-74e5-45e0-a338-c8c6dca1c85d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Core">
+      <UniqueIdentifier>{97d2c54e-8b5c-4b3e-a45a-80014fb92258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Sg">
+      <UniqueIdentifier>{729a419a-53bc-4e46-95b5-68ae21464504}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Fichiers de ressources\base</Filter>
+    </ClInclude>
+    <ClInclude Include="launcherdll.h">
+      <Filter>Fichiers de ressources\base</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Fichiers de ressources\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Internet.h">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Auth.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+    <ClInclude Include="Base64.h">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameServer.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+    <ClInclude Include="Manifest.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+    <ClInclude Include="Encrypt.h">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameFile.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+    <ClInclude Include="gCs.h">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="launcherdll.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Fichiers de ressources\base</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Fichiers de ressources\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Manifest.cpp">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClCompile>
+    <ClCompile Include="GameFile.cpp">
+      <Filter>Fichiers d%27en-tête\Sg</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
