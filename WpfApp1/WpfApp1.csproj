@@ -39,7 +39,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>C:\sg\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -48,7 +48,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>C:\sg\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,6 +75,9 @@
   <PropertyGroup>
     <ManifestKeyFile>WpfApp1_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>SGLauncher2.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -98,6 +101,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Antivirus.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="Params.xaml.cs">
       <DependentUpon>Params.xaml</DependentUpon>
     </Compile>
@@ -107,6 +112,7 @@
     <Compile Include="SelfUpdate.Designer.cs">
       <DependentUpon>SelfUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="WindowHelper.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -227,9 +233,6 @@
     <None Include="Resources\5vfabab.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\sg2017.exe" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="data\Settings_Click.png" />
     <Resource Include="data\Settings_Default.png" />
     <Resource Include="data\Settings_Hover.png" />
@@ -257,6 +260,11 @@
   <ItemGroup>
     <Resource Include="data\French_Hover.png" />
     <Resource Include="data\German_Hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\sg2017.exe" />
+    <Resource Include="SGLauncher2.ico" />
+    <Resource Include="sg launcher ico.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

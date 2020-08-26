@@ -21,26 +21,58 @@ public:
 	static uint8_t selectedServer;
 	static uint8_t oldServer;
 
-	static std::map<std::string, uint8_t> GetAvailableServers(std::string userkey)
+	enum errMessage: int
 	{
-		auto servs_file = Internet::Download(SG_APIURL("AvailableServers", "", userkey));
-		if (servs_file == "") return std::map<std::string, uint8_t>();
+		ERRM_UNAUTHORIZED = 1,
+		ERRM_NOSERVERAVAILABLE,
+		ERRM_USERISBANNED,
+		ERRM_NOCREATESERVFILE
+	};
+	
+	struct serverdata_s
+	{
+		uint8_t id;
+		uint16_t port;
+	};
+
+	static std::map<std::string, serverdata_s> pAvailableServers;
+
+	static std::map<std::string, serverdata_s>& GetAvailableServers(std::string userkey, int &errcode)
+	{
+		auto servs_file = Internet::Download(SG_APIURL("AvailableServers", "beta=1", userkey));
+
+		// In case it's unable to create the file (internet error, or no directory authorization)
+		if (servs_file == "")
+		{
+			errcode = ERRM_NOCREATESERVFILE;
+			return pAvailableServers;
+		}
 
 		std::ifstream ifs(servs_file, std::ios::binary);
 		ByteStream<uint16_t> bs(ifs);
 
-		std::map<std::string, uint8_t> servers;
-		auto servCount = bs.read<uint16_t>();
+		auto servCount = bs.read<int16_t>();
 
-		for (auto i = 0; i != servCount; ++i)
+		// In case the server sent an error code
+		if (servCount <= 0)
 		{
-			uint8_t servId = bs.read<uint8_t>();
-			std::string servName = bs.read();
-
-			servers[servName] = servId;
+			errcode = -1 * servCount; // returned as negative number from serv
+			return pAvailableServers;
 		}
 
-		return servers;
+		// The server sent the correct data, parse it.
+		for (auto i = 0; i != servCount; ++i)
+		{
+			serverdata_s serverdata;
+
+			serverdata.id = bs.read<uint8_t>();
+			serverdata.port = bs.read<uint16_t>();
+			std::string servName = bs.read();
+
+			pAvailableServers[servName] = serverdata;
+		}
+
+		return pAvailableServers;
 	}
 
 	static Manifest GetManifestForServer(uint8_t serverId, std::string playerkey)
@@ -73,4 +105,4 @@ public:
 
 uint8_t GameServer::selectedServer = 0;
 uint8_t GameServer::oldServer = 0;
-
+std::map<std::string, GameServer::serverdata_s> GameServer::pAvailableServers = {};

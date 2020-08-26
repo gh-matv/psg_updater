@@ -41,6 +41,7 @@ bool thread_started = false;
 
 std::string playerkey;
 unsigned selected_server;
+unsigned selected_server_port;
 
 char error_code = 0;
 
@@ -145,12 +146,18 @@ extern "C"
 	API bool getservers(char *msg, size_t max_sz)
 	{
 		std::cout << "[API]" __FUNCTION__ << std::endl;
-		auto servers = GameServer::GetAvailableServers(Auth::AuthKey());
+		int errCode = 0;
+		auto servers = GameServer::GetAvailableServers(Auth::AuthKey(), errCode);
+		if (errCode != 0)
+		{
+			strcpy_s(msg, max_sz, std::to_string(errCode).c_str());
+			return true;
+		}
 
 		std::stringstream ss;
 		for (const auto &s : servers)
 		{
-			ss << s.first << "," << (unsigned)s.second << "|";
+			ss << s.first << ",";
 		}
 		
 		if (ss.str().size() > max_sz) return false;
@@ -165,11 +172,12 @@ extern "C"
 		return false; // false = not up2date
 	}
 
-	API bool startupdate(size_t serverid)
+	API bool startupdate(char *servname)
 	{
-		std::cout << "[API]" __FUNCTION__ "(" << serverid << ")" << std::endl;
-		if (thread_started) return false;
-		selected_server = serverid;
+		std::cout << "[API]" __FUNCTION__ "(" << GameServer::pAvailableServers[servname].id << ")" << std::endl;
+		//if (thread_started) return false;
+		selected_server = GameServer::pAvailableServers[servname].id;
+		selected_server_port = GameServer::pAvailableServers[servname].port;
 		gThread = new std::thread(test::ThreadContent);
 		thread_started = true;
 		return true;
@@ -220,8 +228,8 @@ extern "C"
 		ss << "./StreetGears.exe"
 			<< " /locale:cp" << cp
 			<< " /auth_port:55000"
-			//<< " /auth_ip:160.20.145.163"
-			<< "/auth_ip:127.0.0.1"
+			<< " /auth_ip:160.20.145.163"
+			//<< "/auth_ip:127.0.0.1"
 			<< " /login_id:" << Auth::AuthKey();
 
 		std::cout << "[CMD]" << ss.str() << std::endl;

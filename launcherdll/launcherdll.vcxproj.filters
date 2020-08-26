@@ -69,6 +69,9 @@
     <ClInclude Include="gCs.h">
       <Filter>Fichiers d%27en-tête\Sg</Filter>
     </ClInclude>
+    <ClInclude Include="Hwid.h">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="launcherdll.cpp">

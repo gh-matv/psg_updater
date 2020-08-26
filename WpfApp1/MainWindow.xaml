@@ -86,7 +86,7 @@
                 </Style>
             </Image.Style>
         </Image>
-        
+
         <!-- BUTTON SETTINGS -->
         <Image x:Name="btn_settings" Margin="0,10,135,0" Height="42" VerticalAlignment="Top" HorizontalAlignment="Right" Width="51" MouseUp="Btn_settings_MouseUp">
             <Image.Style>
@@ -104,10 +104,10 @@
 
         <ProgressBar x:Name="pb_main" Height="33" Margin="10,0,10,29" VerticalAlignment="Bottom"/>
         <ProgressBar x:Name="pb_sub" Height="10" Margin="10,0,331,-34" VerticalAlignment="Bottom" Grid.Row="1"/>
-        <TextBox x:Name="sai_login" HorizontalAlignment="Right" Height="23" Margin="0,0,34,116" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="174" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionOpacity="0" BorderThickness="0"/>
-        <PasswordBox x:Name="sai_pass" Margin="0,0,30,86" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="178" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" BorderThickness="0"/>
-        <Label x:Name="lbl_progresstext" Content="Label" HorizontalAlignment="Left" Margin="10,542,0,0" VerticalAlignment="Top" Width="1026" Grid.RowSpan="2"/>
-        <ListBox x:Name="list_servers" HorizontalAlignment="Left" Height="92" Margin="372,138,0,0" VerticalAlignment="Top" Width="343" FontSize="18.667" Foreground="White" BorderBrush="White" Padding="22,15,0,0">
+        <TextBox x:Name="sai_login" HorizontalAlignment="Right" Height="23" Margin="0,0,34,116" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="174" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" SelectionOpacity="0" BorderThickness="0" TextChanged="Sai_login_TextChanged"/>
+        <PasswordBox x:Name="sai_pass" Margin="0,0,30,86" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="178" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" BorderThickness="0" KeyDown="sai_pass_KeyDown"/>
+        <Label x:Name="lbl_progresstext" Content="Waiting for user authentication." HorizontalAlignment="Left" Margin="10,542,0,0" VerticalAlignment="Top" Width="1026" Grid.RowSpan="2"/>
+        <ListBox x:Name="list_servers" HorizontalAlignment="Left" Height="228" Margin="372,138,0,0" VerticalAlignment="Top" Width="343" FontSize="18.667" Foreground="White" BorderBrush="White" Padding="22,15,0,0">
             <ListBox.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF2D3EAA" Offset="0.483"/>
@@ -118,7 +118,7 @@
             </ListBox.Background>
         </ListBox>
         <Label x:Name="lbl_serverselection" Content="SERVER SELECTION" HorizontalAlignment="Left" Margin="372,95,0,0" VerticalAlignment="Top" Width="343" Height="38" Foreground="White" FontSize="18.667" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        
+
 
     </Grid>
 </Window>

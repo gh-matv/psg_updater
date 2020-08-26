@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -31,7 +32,7 @@ namespace WpfApp1
                 case 1141:
                     img_gersel.Opacity = 1;
                     break;
-                case 1139:
+                case 949:
                     img_ensel.Opacity = 1;
                     break;
             }
@@ -47,6 +48,11 @@ namespace WpfApp1
             try
             {
                 File.Delete("mnfst.sg");
+
+                //Globals.mutex.ReleaseMutex();
+                //Globals.mutex.Dispose();
+                Globals.mutex.Close();
+
                 Process.Start(AppDomain.CurrentDomain.FriendlyName);
                 Environment.Exit(0);
             }
@@ -66,13 +72,9 @@ namespace WpfApp1
 
         private void Img_ensel_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            MessageBox.Show("Coming soon !");
-            return; 
-            /*
-            Properties.Settings.Default.lang = 1139;
+            Properties.Settings.Default.lang = 949;
             Properties.Settings.Default.Save();
             UpdateSelectedLanguage();
-            */
         }
 
         private void Img_frsel_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

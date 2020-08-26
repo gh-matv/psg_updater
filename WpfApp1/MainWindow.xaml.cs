@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using WpfApp1.Antivirus;
 
 namespace WpfApp1
 {
@@ -16,9 +18,20 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
         public const string dll = @"lnc.dll";
-
         public MainWindow()
         {
+
+            AntivirusAdvisor();
+
+            bool createdNew;
+            Globals.mutex = new Mutex(true, "psg_launcher", out createdNew);
+            if (!createdNew)
+            {
+                WindowHelper.BringAllProcessToFront(Process.GetCurrentProcess().ProcessName);
+                this.Close();
+                return;
+            }
+
             SelfUpdate su = new SelfUpdate();
             su.ShowDialog();
 
@@ -58,7 +71,7 @@ namespace WpfApp1
 
         [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
-        public static extern bool startupdate(int serverid);
+        public static extern bool startupdate([MarshalAs(UnmanagedType.LPStr)] StringBuilder stringBuilder);
 
         [DllImport(dll, CallingConvention = CallingConvention.Cdecl)]
         public static extern void getprogressmsg([MarshalAs(UnmanagedType.LPStr)] StringBuilder stringBuilder, int size);
@@ -92,6 +105,13 @@ namespace WpfApp1
         public static extern float getprogresspercent();
 
         // ========================= EVENTS ================================
+        enum errMessage : int
+        {
+            ERRM_UNAUTHORIZED = 1,
+            ERRM_NOSERVERAVAILABLE,
+            ERRM_USERISBANNED,
+            ERRM_NOCREATESERVFILE
+        };
 
         private void Btn_close_MouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -120,11 +140,11 @@ namespace WpfApp1
 
         private void Btn_forgotpw_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            Process.Start("https://streetgears.eu?c=Auth&a=forgotpassword");
+            Process.Start("https://streetgears.eu/Auth/forgotpassword");
         }
 
 
-        private void Btn_logout_MouseUp(object sender, MouseButtonEventArgs e)
+        public void Btn_logout_MouseUp(object sender, MouseButtonEventArgs e)
         {
             logout();
             SetLoginboxVisible(true);
@@ -141,6 +161,24 @@ namespace WpfApp1
         }
 
         // ======================== ACTIONS =================================
+
+        public static void AntivirusAdvisor()
+        {
+            if (!Properties.Settings.Default.antivirus_message_shown && !Antivirus.WinDefender.CheckForExclusion(AppDomain.CurrentDomain.BaseDirectory))
+            {
+                switch (MessageBox.Show("You must add an exception to your antivirus to play the game.\nDo you want to do it automatically ?", "PSG - Warning [0441]", MessageBoxButton.YesNo))
+                {
+                    case MessageBoxResult.Yes:
+                        Antivirus.WinDefender.AddExclusion(AppDomain.CurrentDomain.BaseDirectory);
+                        break;
+                    case MessageBoxResult.No:
+                        MessageBox.Show($"Please add the following path as an exclusion in your antivirus software :\n{AppDomain.CurrentDomain.BaseDirectory}", "PSG - Info [0442]");
+                        break;
+                }
+                Properties.Settings.Default.antivirus_message_shown = true;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         private void SetLoginboxVisible(bool visible)
         {
@@ -178,7 +216,7 @@ namespace WpfApp1
             }
         }
 
-        private int selectedServer = 0;
+        private string selectedServer = "";
         private void AfterLoginChecks()
         {
             SetLoginboxVisible(false);
@@ -191,14 +229,38 @@ namespace WpfApp1
                 return;
             }
 
-            if(!s.ToString().Contains("|"))
+            if(!s.ToString().Contains(","))
             {
+                // No server is sent back by the server. That means either none is available by the player
+                //  or the token is invalid. We might add a check serverside and here later.
+                // TODO
+
                 //MessageBox.Show("Invalid answer from dll !");
-                Btn_logout_MouseUp(null, null);
+                switch(int.Parse(s.ToString()))
+                {
+                    case (int)errMessage.ERRM_UNAUTHORIZED:
+                        // MessageBox.Show("Error while trying to connect to the server. Please login again.");
+                        Btn_logout_MouseUp(null, null);
+                        break;
+                    case (int)errMessage.ERRM_NOSERVERAVAILABLE:
+                        MessageBox.Show("The server is currently in maintenance mode. Please try again later and check the discord for more details.", "PSG - Maintenance [7284]");
+                        break;
+                    case (int)errMessage.ERRM_USERISBANNED:
+                        MessageBox.Show("You are banned from this game.", "PSG - Info [0019]");
+                        break;
+                    case (int)errMessage.ERRM_NOCREATESERVFILE:
+                        MessageBox.Show("Unable to save authorization file. Please start again in admin mode.", "PSG - Error [1179]");
+                        break;
+                    default:
+                        MessageBox.Show("An unknown error happened.", "PSG - Error [0001-"+s.ToString()+"]");
+                        break;
+                }
+                Environment.Exit(0);
+                // Btn_logout_MouseUp(null, null);
                 return;
             }
 
-            var servers = s.ToString().Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            var servers = s.ToString().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             if(servers.Length > 1)
             {
                 // Display the server list on the UI.
@@ -207,19 +269,19 @@ namespace WpfApp1
                 list_servers.SelectionChanged += OnSelectServer;
                 foreach(var server in servers)
                 {
-                    list_servers.Items.Add("" + server.Split(',')[1] + "\t" + server.Split(',')[0]);
+                    list_servers.Items.Add(server);
                 }
                 return;
             }
 
-            selectedServer = int.Parse(servers[0].Split(',')[1]);
+            selectedServer = servers[0];
             AfterServerChoiceCheck();
         }
 
         private void OnSelectServer(object sender, SelectionChangedEventArgs e)
         {
             if (list_servers.SelectedItem == null) return;
-            selectedServer = int.Parse(((string)list_servers.SelectedItem).Split('\t')[0]);
+            selectedServer = (string)list_servers.SelectedItem;
             list_servers.Visibility = Visibility.Hidden;
             lbl_serverselection.Visibility = Visibility.Hidden;
             AfterServerChoiceCheck();
@@ -227,7 +289,7 @@ namespace WpfApp1
 
         private void AfterServerChoiceCheck()
         {
-            if(selectedServer == 0)
+            if(selectedServer == "")
             {
                 MessageBox.Show("Wrong selected server !");
                 return;
@@ -237,7 +299,9 @@ namespace WpfApp1
 
             if (!quickuptodatecheck())
             {
-                if (!startupdate(selectedServer))
+                var x = new StringBuilder();
+                x.Append(selectedServer);
+                if (!startupdate(x))
                 {
                     MessageBox.Show("Unable to start the udpate.");
                     return;
@@ -274,14 +338,35 @@ namespace WpfApp1
 
         private void Btn_start_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(Properties.Settings.Default.lang < 1140)
+
+            // Try to automatically deduce the language, based on computer's UI language.
+            // Else, open the "options" menu to let the user select his language.
+            if(Properties.Settings.Default.lang < 900)
             {
-                var p = new Params();
-                p.ShowDialog();
-                return;
+                switch(CultureInfo.InstalledUICulture.IetfLanguageTag.Split('-')[0])
+                {
+                    case "fr":
+                        Properties.Settings.Default.lang = 1147;
+                        break;
+
+                    case "en":
+                        Properties.Settings.Default.lang = 949;
+                        break;
+
+                    case "de":
+                        Properties.Settings.Default.lang = 1141;
+                        break;
+
+                    default:
+                        var p = new Params();
+                        p.ShowDialog();
+                        return;
+                }
+                Properties.Settings.Default.Save();
             }
 
             startgame(Properties.Settings.Default.lang);
+            Environment.Exit(0);
         }
 
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -312,5 +397,19 @@ namespace WpfApp1
             p.ShowDialog();
             this.Show();
         }
+
+        private void Sai_login_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void sai_pass_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                Btn_login_MouseUp(null, null);
+            }
+        }
+
     }
 }

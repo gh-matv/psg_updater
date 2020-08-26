@@ -10,7 +10,8 @@ namespace WpfApp1
     public partial class SelfUpdate : Form
     {
 
-        public const bool DISABLE_UPDATE = true;
+        public const bool DISABLE_UPDATE = false;
+        public const bool BETA_CHANNEL = false;
 
         public bool done_successfully = false;
 
@@ -29,7 +30,7 @@ namespace WpfApp1
         {
             var psi = new ProcessStartInfo();
             psi.FileName = hasher_path;
-            psi.Arguments = file;
+            psi.Arguments = "" + '"' + file + '"';
             psi.RedirectStandardOutput = true;
             psi.RedirectStandardError = true;
             psi.UseShellExecute = false;
@@ -62,6 +63,15 @@ namespace WpfApp1
 
             var exe_version_client = Hash(hashCalculatorPath, Path.GetFullPath(AppDomain.CurrentDomain.FriendlyName));
 
+            /*
+            File.WriteAllLines("./debug_for_geek.txt", new string[]
+            {
+                "exe_s: " + exe_version_server,
+                "dll_s: " + dll_version_server,
+                "exe_c: " + exe_version_client
+            });
+            */
+
             if (!File.Exists("lnc.dll"))
             {
                 // download lnc.dll
@@ -88,7 +98,6 @@ namespace WpfApp1
 
             if (is_new_version(exe_version_client, exe_version_server))
             {
-                
                 // download Launcher.exe
                 try
                 {
@@ -99,24 +108,19 @@ namespace WpfApp1
                     //var process_name = Process.GetCurrentProcess().ProcessName;
                     var file_name = AppDomain.CurrentDomain.FriendlyName;
                     string data_bat = "@echo off"
-                                    + "\n:beg"
-                                    + $"\necho Waiting for {file_name} process to exit"
-                                    + $"\ntasklist /FI \"IMAGENAME eq {file_name}\" 2>NUL | find /I /N \"{file_name}\">NUL"
-                                    + "\nif \"%ERRORLEVEL%\"==\"1\" goto next"
-                                    + "\ngoto beg"
-                                    + "\n:next"
+                                    + $"\ntaskkill /F /IM {file_name} /T"
                                     + "\ndel " + file_name
-                                    + "\necho renaming launcher files"
+                                    //+ "\necho renaming launcher files"
                                     + "\nren newlauncher.bin " + file_name
                                     + "\nstart " + file_name
-                                    + "\necho Done !"
+                                    //+ "\necho Done !"
                                     //+ "\npause"
                                     + "\n del exec.bat"
                                     ;
                     File.WriteAllText("exec.bat", data_bat);
 
                     Process.Start("exec.bat");
-                    System.Threading.Thread.Sleep(50);
+                    Thread.Sleep(50);
                     Environment.Exit(0);
                 }
                 catch (Exception err)

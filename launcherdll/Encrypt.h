@@ -14,6 +14,17 @@ class Encrypt
 {
 public:
 
+	static std::string Xor(std::string a, std::string b)
+	{
+		std::stringstream ss;
+
+		auto len = a.length();
+		for (auto i = 0; i != len; ++i)
+			ss << (a[i] ^= b[i%b.length()]);
+
+		return ss.str();
+	}
+
 	static std::string Xor(std::string inp, char xorkey = 0x42)
 	{
 		for (auto i = 0; i != inp.size(); ++i)

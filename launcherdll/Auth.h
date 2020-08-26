@@ -6,10 +6,13 @@
 
 #include <boost/filesystem.hpp>
 
+#include "Encrypt.h"
 #include "Internet.h"
 #include "Defines.h"
 #include "Globals.h"
 #include "base64.h"
+
+#include "Hwid.h"
 
 class Auth
 {
@@ -40,8 +43,13 @@ public:
 
 		std::cout << "[AUTH] Read authkey=" << ss.str() << std::endl;
 
-		Globals::userkey = ss.str();
-		return ss.str();
+		// Decrypt it
+		sHWID hdd;
+		getDiskSerial(hdd);
+		auto str = Encrypt::Xor(ss.str(), hdd.MainDiskSerial);
+
+		Globals::userkey = str;
+		return str;
 	}
 
 	static bool Authentify(
@@ -63,7 +71,10 @@ public:
 		std::ofstream ofs((boost::filesystem::path(".") / TOKEN_FILE_NAME).string(), std::ios::trunc);
 		if (!ofs.is_open()) return false;
 
-		ofs << authcode;
+		// Encrypt it
+		sHWID hdd;
+		getDiskSerial(hdd);
+		ofs << Encrypt::Xor(authcode, hdd.MainDiskSerial);
 
 		return true;
 	}
