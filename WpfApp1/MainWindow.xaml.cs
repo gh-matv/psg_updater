@@ -249,7 +249,8 @@ namespace WpfApp1
                         MessageBox.Show("You are banned from this game.", "PSG - Info [0019]");
                         break;
                     case (int)errMessage.ERRM_NOCREATESERVFILE:
-                        MessageBox.Show("Unable to save authorization file. Please start again in admin mode.", "PSG - Error [1179]");
+                        MessageBox.Show("Unable to save authorization file. Please start again in admin mode, and login again.", "PSG - Error [1179]");
+                        Btn_logout_MouseUp(null, null);
                         break;
                     default:
                         MessageBox.Show("An unknown error happened.", "PSG - Error [0001-"+s.ToString()+"]");
