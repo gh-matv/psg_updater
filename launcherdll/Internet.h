@@ -15,6 +15,8 @@ class Internet
 {
 public:
 
+	static inline HRESULT lastresult;
+
 	static std::string Download(std::string url, std::string path = "")
 	{
 		if (path != "")
@@ -28,8 +30,12 @@ public:
 			tmpFileName.resize(_MAX_PATH);
 
 			auto ret = URLDownloadToCacheFile(NULL, url.c_str(), (LPSTR)tmpFileName.data(), _MAX_PATH, NULL, NULL);
+			lastresult = ret;
 
-			if (ret != S_OK) return "";
+			if (ret != S_OK)
+			{
+				return "";
+			}
 
 			return tmpFileName;
 		}
@@ -63,3 +69,4 @@ public:
 
 };
 
+//HRESULT Internet::lastresult = 0;

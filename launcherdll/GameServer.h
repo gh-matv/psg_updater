@@ -26,7 +26,9 @@ public:
 		ERRM_UNAUTHORIZED = 1,
 		ERRM_NOSERVERAVAILABLE,
 		ERRM_USERISBANNED,
-		ERRM_NOCREATESERVFILE
+		ERRM_NOCREATESERVFILE_GENERIC,
+		ERRM_NOCREATESERVFILE_OUTOFMEM,
+		ERRM_NOCREATESERVFILE_DOWNLOADFAILED
 	};
 	
 	struct serverdata_s
@@ -39,12 +41,26 @@ public:
 
 	static std::map<std::string, serverdata_s>& GetAvailableServers(std::string userkey, int &errcode)
 	{
+		std::cout << __FUNCTION__ << std::endl;
 		auto servs_file = Internet::Download(SG_APIURL("AvailableServers", "beta=1", userkey));
+
+		std::cout << servs_file << std::endl;
 
 		// In case it's unable to create the file (internet error, or no directory authorization)
 		if (servs_file == "")
 		{
-			errcode = ERRM_NOCREATESERVFILE;
+			switch (Internet::lastresult)
+			{
+			case E_OUTOFMEMORY:
+				errcode = ERRM_NOCREATESERVFILE_OUTOFMEM;
+				break;
+			case INET_E_DOWNLOAD_FAILURE:
+				errcode = ERRM_NOCREATESERVFILE_DOWNLOADFAILED;
+				break;
+			default:
+				errcode = ERRM_NOCREATESERVFILE_GENERIC;
+			}
+
 			return pAvailableServers;
 		}
 

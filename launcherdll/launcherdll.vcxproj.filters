@@ -95,5 +95,8 @@
     <ClCompile Include="GameFile.cpp">
       <Filter>Fichiers d%27en-tête\Sg</Filter>
     </ClCompile>
+    <ClCompile Include="Reporting.h">
+      <Filter>Fichiers d%27en-tête\Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

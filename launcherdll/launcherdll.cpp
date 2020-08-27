@@ -1,6 +1,8 @@
 // launcherdll.cpp : Définit les fonctions exportées de la DLL.
 //
 
+#define _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECIATION_WARNING
+
 #include "pch.h"
 #include "framework.h"
 #include "launcherdll.h"
