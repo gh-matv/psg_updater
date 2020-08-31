@@ -17,7 +17,7 @@
 class Auth
 {
 #define TOKEN_FILE_NAME "token"
-#define URL_LOGIN SG_URL "?c=Auth&a=Login"
+#define URL_LOGIN SG_URL "?c=Api_Patcher&a=Login"
 
 public:
 
